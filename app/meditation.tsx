@@ -8,14 +8,18 @@ const MeditationApp: React.FC = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   let timerInterval: NodeJS.Timeout | null = null;
 
-  async function playSound(type: "rain" | "ocean"): Promise<void> {
+  async function playSound(
+    type: "rain" | "ocean" | "bilateral"
+  ): Promise<void> {
     if (sound) {
       await sound.unloadAsync();
     }
     const { sound: newSound } = await Audio.Sound.createAsync(
       type === "rain"
         ? require("../assets/rain.mp3")
-        : require("../assets/ocean.mp3"),
+        : type === "ocean"
+        ? require("../assets/ocean.mp3")
+        : require("../assets/bilateral.mp3"),
       { shouldPlay: true, isLooping: true }
     );
     setSound(newSound);
@@ -111,6 +115,17 @@ const MeditationApp: React.FC = () => {
           }}
         >
           <Text style={{ color: "white" }}>Play Ocean</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => playSound("bilateral")}
+          style={{
+            padding: 10,
+            backgroundColor: "gray",
+            margin: 10,
+            borderRadius: 10,
+          }}
+        >
+          <Text style={{ color: "white" }}>Play Bilateral</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
